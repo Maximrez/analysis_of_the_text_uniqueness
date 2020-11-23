@@ -1,2 +1,2 @@
-# analysis_of_the_text_uniqueness
+# AnalysisTextUniqueness
 Разработка программы проверки текста на заимствования
