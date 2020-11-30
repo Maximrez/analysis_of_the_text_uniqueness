@@ -39,6 +39,11 @@ file_txt.close()
 определение заимствованности предложения в найденных страницах
 '''
 
+api_key = "YOUR RAPID API KEY"
+
+if api_key == "YOUR RAPID API KEY":
+    api_key = input("Введите свой RapidAPI key: ")
+
 search_results = list()
 links = dict()
 
@@ -53,7 +58,7 @@ for sentence in sentences:
     words = tokenize_sentence(sentence)
 
     if len(words) > 7:
-        results = (search_rapid(sentence))["results"]
+        results = (search_rapid(sentence, api_key))["results"]
 
         score, link = comparison(words, results)
 
