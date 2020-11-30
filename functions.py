@@ -11,7 +11,7 @@ https://rapidapi.com/apigeek/api/google-search3/endpoints
 
 def search_rapid(query, num=10):
     headers = {
-        "x-rapidapi-key": "10572f8cc5msh4b3d78a2b575aebp1b330bjsn409ce92f1100",
+        "x-rapidapi-key": "your rapid api key",
         "x-rapidapi-host": "google-search3.p.rapidapi.com"
     }
 
