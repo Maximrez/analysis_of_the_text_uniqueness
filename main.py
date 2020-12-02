@@ -5,7 +5,7 @@ from sys import argv
 Открытие файла и чтение, обработка возможных ошибок
 '''
 
-formats = ["txt"]
+formats = ["txt", "pdf"]
 
 if len(argv) == 1:
     file_path = input(f"Путь к файлу с текстом ({', '.join(formats)}): ")
@@ -16,8 +16,10 @@ flag = True
 
 while flag:
     try:
-        while len(file_path.split('.')) == 0 or file_path.split('.')[-1] not in formats:
+        f_folder, f_name, f_format = tokenize_path(file_path)
+        while f_format not in formats:
             file_path = input("Введите название файла с его расширением: ")
+            f_folder, f_name, f_format = tokenize_path(file_path)
 
         file_txt = open(file_path, 'r', encoding="utf-8")
         flag = False
@@ -26,13 +28,16 @@ while flag:
         print("Файл не найден!")
         file_path = input("Введите путь к файлу с текстом: ")
 
-try:
-    sentences = tokenize_text(file_txt.read())
-except UnicodeDecodeError:
-    file_txt = open(file_path, 'r')
-    sentences = tokenize_text(file_txt.read())
+if f_format == ".txt":
+    try:
+        sentences = tokenize_text(file_txt.read())
+    except UnicodeDecodeError:
+        file_txt = open(file_path, 'r')
+        sentences = tokenize_text(file_txt.read())
 
-file_txt.close()
+    file_txt.close()
+elif f_format == ".pdf":
+    sentences = tokenize_text(convert_pdf_to_txt(file_path))
 
 '''
 Поиск предложений, число уникальных слов в которых больше 7, в google;
@@ -48,6 +53,7 @@ search_results = list()
 links = dict()
 
 total = len(sentences)
+
 count = 0
 
 sum_scores = 0
@@ -62,15 +68,16 @@ for sentence in sentences:
 
         score, link = comparison(words, results)
 
-        if link not in links:
-            links[link] = score
-        else:
-            links[link] += score
+        if score != 0:
+            if link not in links:
+                links[link] = score
+            else:
+                links[link] += score
 
-        search_results.append((score, sentence, link))
+            search_results.append((score, sentence, link))
 
-        sum_scores += score
-        count_scores += 1
+            sum_scores += score
+            count_scores += 1
 
     count += 1
     if (count / total) // 0.1 > ((count - 1) / total) // 0.1:
@@ -84,8 +91,7 @@ print()
 запись в файл с названием result_ + название исходного файла в директорию расположения исходного файла
 '''
 
-file_path = file_path.split('/')
-result_path = '/'.join(file_path[:-1] + [f"result_{''.join((file_path[-1]).split('.')[:-1])}.txt"])
+result_path = f_folder + "result_" + f_name + ".txt"
 
 print_and_write("Процент заимствованности текста: " + percentage(sum_scores, count_scores, 2), result_path)
 
@@ -121,7 +127,7 @@ print_and_write("Результаты работы по всем предлож�
 
 for search_result in search_results:
     print_and_write(search_result[1], result_path)
-    print_and_write(search_result[0], result_path)
+    print_and_write(round(search_result[0], 4), result_path)
     print_and_write(search_result[2], result_path)
 
     print_and_write('', result_path)
