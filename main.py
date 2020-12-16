@@ -16,10 +16,10 @@ flag = True
 
 while flag:
     try:
-        f_folder, f_name, f_format = tokenize_path(file_path)
+        f_name, f_format = tokenize_path(file_path)
         while f_format not in formats:
             file_path = input("Введите название файла с его расширением: ")
-            f_folder, f_name, f_format = tokenize_path(file_path)
+            f_name, f_format = tokenize_path(file_path)
 
         file_txt = open(file_path, 'r', encoding="utf-8")
         flag = False
@@ -28,7 +28,7 @@ while flag:
         print("Файл не найден!")
         file_path = input("Введите путь к файлу с текстом: ")
 
-if f_format == ".txt":
+if f_format == "txt":
     try:
         sentences = tokenize_text(file_txt.read())
     except UnicodeDecodeError:
@@ -36,7 +36,7 @@ if f_format == ".txt":
         sentences = tokenize_text(file_txt.read())
 
     file_txt.close()
-elif f_format == ".pdf":
+elif f_format == "pdf":
     sentences = tokenize_text(convert_pdf_to_txt(file_path))
 
 '''
@@ -91,7 +91,7 @@ print()
 запись в файл с названием result_ + название исходного файла в директорию расположения исходного файла
 '''
 
-result_path = f_folder + "result_" + f_name + ".txt"
+result_path = f_name + "_result" + ".txt"
 
 print_and_write("Процент заимствованности текста: " + percentage(sum_scores, count_scores, 2), result_path)
 

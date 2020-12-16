@@ -66,14 +66,11 @@ def convert_pdf_to_txt(path):
 
 
 def tokenize_path(path):
-    f_folder = '/'.join(path.split('/')[:-1] + [""])
-    name_and_format = path.split('/')[-1]
-    if len(name_and_format.split('.')) == 1:
-        return f_folder, name_and_format, ''
-    f_name = '.'.join(name_and_format.split('.')[:-1])
-    f_format = name_and_format.split('.')[-1]
-    return f_folder, f_name, f_format
-
+    if len(path.split('.')) == 1:
+        return path, ''
+    f_name = '.'.join(path.split('.')[:-1])
+    f_format = path.split('.')[-1]
+    return f_name, f_format
 
 '''
 Функция, считающая процент от числа
